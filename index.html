@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Calculator</title>
+    <style>
+        body {
+            background-color: #02010d; /* Midnight shade background color */
+            color: white;
+            font-family: Helvetica, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            font-family: Helvetica, sans-serif;
+            font-size: 16px;
+            margin: 5px;
+            padding: 5px;
+        }
+        button {
+            background-color: #B19CD9; /* Button color */
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #D7BDE2; /* Button hover color */
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #B19CD9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Time Calculator</h1>
+    <p>Enter clock in time (HH:MM format):</p>
+    <input type="text" id="timeInput" placeholder="HH:MM">
+    <br>
+    <button onclick="calculateTime()">Calculate</button>
+    <button onclick="logTime()">Log</button>
+    <button onclick="toggleLog()">Display Log</button>
+    <p id="result"></p>
+    <p id="countdown"></p>
+    <div id="logTable" style="display: none;"></div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
