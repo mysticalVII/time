@@ -1,86 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Calculator</title>
-    <style>
-        body {
-            background-color: #02010d;
-            color: white;
-            font-family: Helvetica, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        input {
-            font-family: Helvetica, sans-serif;
-            font-size: 16px;
-            margin: 10px;
-            padding: 5px;
-            text-align: center;
-            width: 120px;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Time Calculator</title>
+  <style>
+    :root{
+      --bg: #02010d;
+      --muted: #3a3350;
+      --accent: #B19CD9;
+      --good: #79dda3;
+      --bad: #d65b94;
+      --purple: #8084e8;
+    }
+    body{
+      background: var(--bg);
+      color: #fff;
+      font-family: Helvetica, Arial, sans-serif;
+      text-align:center;
+      padding-top:48px;
+    }
+    input[type="text"]{
+      width:120px;
+      padding:8px 10px;
+      font-size:16px;
+      text-align:center;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      color: #fff;
+    }
+    .controls{ margin:16px 0; display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap; }
 
-        /* Toggle switch style */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-            margin: 10px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #d65b94;
-            transition: .4s;
-            border-radius: 30px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 22px; width: 22px;
-            left: 4px; bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #79dda3;
-        }
-        input:checked + .slider:before {
-            transform: translateX(30px);
-        }
+    /* Fancy toggle */
+    .switch{
+      display:inline-block;
+      width:140px;
+      height:42px;
+      position:relative;
+      cursor:pointer;
+    }
+    .switch input{ display:none; }
+    .slider{
+      position:absolute;
+      inset:0;
+      border-radius:999px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.12));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+      padding:4px;
+      box-sizing:border-box;
+    }
+    .option{
+      position:absolute;
+      top:0; bottom:0;
+      width:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      letter-spacing:0.2px;
+      font-size:14px;
+      color: rgba(255,255,255,0.9);
+      transition: color .18s, opacity .18s;
+      pointer-events:none;
+    }
+    .left{ left:0; }
+    .right{ right:0; }
+    .knob{
+      position:absolute;
+      top:4px;
+      left:4px;
+      width:calc(50% - 8px);
+      height:calc(100% - 8px);
+      background:#fff;
+      border-radius:999px;
+      transition: transform .22s;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+    /* visual state when checked (Half Day) */
+    .switch input:checked + .slider{ background: linear-gradient(180deg,#223b2d,#1b2e27); }
+    .switch input:checked + .slider .knob{ transform: translateX(100%); }
+    .switch input:checked + .slider .left{ opacity:0.6; color: rgba(255,255,255,0.9); }
+    .switch input:not(:checked) + .slider .right{ opacity:0.6; }
 
-        .toggle-label {
-            display: block;
-            margin-top: 5px;
-            font-size: 14px;
-        }
-    </style>
+    /* Button */
+    button{
+      padding:8px 14px;
+      border-radius:8px;
+      font-weight:700;
+      border:none;
+      cursor:pointer;
+      background:var(--accent);
+      color:#080214;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+    }
+    button:hover{ filter:brightness(1.06); }
+
+    #result{ margin-top:18px; font-weight:600; }
+    #countdown{ margin-top:8px; font-size:16px; }
+
+    .small{ font-size:13px; opacity:0.85; margin-top:6px; }
+  </style>
 </head>
 <body>
+  <h1>Time Calculator</h1>
 
-    <h1>Time Calculator</h1>
-    <p>Enter clock in time (HH:MM format):</p>
-    <input type="text" id="timeInput" placeholder="HH:MM">
+  <p>Enter clock in time (HH:MM):</p>
 
+  <div class="controls">
+    <input id="timeInput" type="text" placeholder="HH:MM" aria-label="Clock in time">
     <!-- Toggle -->
-    <label class="switch">
-        <input type="checkbox" id="shiftToggle">
-        <span class="slider"></span>
+    <label class="switch" title="Toggle Full / Half day">
+      <input id="shiftToggle" type="checkbox">
+      <span class="slider">
+        <span class="option left">Full</span>
+        <span class="option right">Half</span>
+        <span class="knob" aria-hidden="true"></span>
+      </span>
     </label>
-    <div class="toggle-label" id="toggleText">Full Day (9.5 hrs)</div>
 
-    <p id="result"></p>
-    <p id="countdown"></p>
+    <button id="calculateBtn">Calculate</button>
+  </div>
 
-    <script src="script.js"></script>
+  <div id="shiftInfo" class="small">Shift: <strong>Full Day (9.5 hrs)</strong></div>
+
+  <p id="result"></p>
+  <p id="countdown"></p>
+
+  <script src="script.js"></script>
 </body>
 </html>
