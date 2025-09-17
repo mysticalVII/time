@@ -3,52 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <title>Time Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       background: black;
       color: #00ff66;
       font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
+      padding: 0;
     }
     .container {
-      border: 2px solid #00ff66;
+      border-top: 2px solid #00ff66;
+      border-bottom: 2px solid #00ff66;
       padding: 20px;
-      border-radius: 6px;
-      width: 320px;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
       text-align: left;
       box-shadow: 0 0 10px #00ff66;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
     h1 {
       text-align: center;
       margin-bottom: 20px;
       letter-spacing: 2px;
       color: #66ffb2;
+      font-size: 1.5rem;
     }
     label {
       display: block;
       margin-bottom: 8px;
+      font-size: 0.9rem;
     }
     input[type="time"] {
       width: 100%;
-      padding: 6px;
+      padding: 10px;
       background: black;
       border: 1px solid #00ff66;
       color: #00ff66;
       outline: none;
       margin-bottom: 16px;
+      font-size: 1rem;
     }
     button {
       background: black;
       border: 1px solid #00ff66;
       color: #00ff66;
-      padding: 8px;
+      padding: 10px;
       width: 100%;
       cursor: pointer;
       font-family: monospace;
+      font-size: 1rem;
+      margin-bottom: 12px;
     }
     button:hover {
       background: #00ff66;
@@ -60,13 +69,14 @@
     }
     .toggle button {
       width: auto;
-      padding: 6px 12px;
+      padding: 8px 16px;
       margin: 0 auto;
     }
-    .result {
-      margin-top: 20px;
-      font-size: 18px;
+    .result, .countdown {
+      margin-top: 16px;
+      font-size: 1rem;
       text-align: center;
+      word-wrap: break-word;
     }
     /* Retro scanline effect */
     body::before {
@@ -100,39 +110,9 @@
     <button id="calcBtn">&gt; CALCULATE</button>
 
     <div id="result" class="result"></div>
+    <div id="countdown" class="countdown"></div>
   </div>
 
-  <script>
-    let isFullDay = true;
-    const toggleBtn = document.getElementById("toggleBtn");
-    const calcBtn = document.getElementById("calcBtn");
-    const timeInput = document.getElementById("timeInput");
-    const result = document.getElementById("result");
-
-    toggleBtn.addEventListener("click", () => {
-      isFullDay = !isFullDay;
-      toggleBtn.textContent = isFullDay ? "FULL" : "HALF";
-    });
-
-    calcBtn.addEventListener("click", () => {
-      const time = timeInput.value;
-      if (!time) return;
-
-      const [hours, minutes] = time.split(":").map(Number);
-      if (isNaN(hours) || isNaN(minutes)) return;
-
-      let addedHours = isFullDay ? 8 : 4;
-      const date = new Date();
-      date.setHours(hours);
-      date.setMinutes(minutes);
-      date.setSeconds(0);
-      date.setHours(date.getHours() + addedHours);
-
-      const hh = String(date.getHours()).padStart(2, "0");
-      const mm = String(date.getMinutes()).padStart(2, "0");
-
-      result.textContent = "END TIME ► " + hh + ":" + mm;
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
