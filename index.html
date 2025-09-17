@@ -6,38 +6,62 @@
     <title>Time Calculator</title>
     <style>
         body {
-            background-color: #02010d; /* Midnight shade background color */
+            background-color: #02010d;
             color: white;
             font-family: Helvetica, sans-serif;
             text-align: center;
             margin-top: 50px;
         }
-        input, button, select {
+        input {
             font-family: Helvetica, sans-serif;
             font-size: 16px;
-            margin: 5px;
+            margin: 10px;
             padding: 5px;
-        }
-        button {
-            background-color: #B19CD9; /* Button color */
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #D7BDE2; /* Button hover color */
-        }
-        table {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 80%;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
             text-align: center;
+            width: 120px;
         }
-        th {
-            background-color: #B19CD9;
+
+        /* Toggle switch style */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin: 10px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #d65b94;
+            transition: .4s;
+            border-radius: 30px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px; width: 22px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #79dda3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            display: block;
+            margin-top: 5px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -46,21 +70,17 @@
     <h1>Time Calculator</h1>
     <p>Enter clock in time (HH:MM format):</p>
     <input type="text" id="timeInput" placeholder="HH:MM">
-    <br>
 
-    <!-- Shift length toggle -->
-    <label for="shiftLength">Select shift:</label>
-    <select id="shiftLength">
-        <option value="9.5" selected>Full Day (9.5 hrs)</option>
-        <option value="4.5">Half Day (4.5 hrs)</option>
-    </select>
-    <br>
+    <!-- Toggle -->
+    <label class="switch">
+        <input type="checkbox" id="shiftToggle">
+        <span class="slider"></span>
+    </label>
+    <div class="toggle-label" id="toggleText">Full Day (9.5 hrs)</div>
 
-    <button onclick="calculateTime()">Calculate</button>
     <p id="result"></p>
     <p id="countdown"></p>
 
     <script src="script.js"></script>
-
 </body>
 </html>
