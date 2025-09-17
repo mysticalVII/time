@@ -1,17 +1,27 @@
 let countdownInterval;
+let typingTimer;
 
-function exeCalTime() {
-    let key = event.key;
-    if (key == "Enter") {
-        calculateTime();
+document.getElementById('timeInput').addEventListener('keyup', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(calculateTime, 1000); // 1 sec delay after typing stops
+});
+
+document.getElementById('shiftToggle').addEventListener('change', () => {
+    const toggleText = document.getElementById('toggleText');
+    if (document.getElementById('shiftToggle').checked) {
+        toggleText.textContent = "Half Day (4.5 hrs)";
+    } else {
+        toggleText.textContent = "Full Day (9.5 hrs)";
     }
-}
+    calculateTime(); // re-calc immediately when toggle changes
+});
 
 function calculateTime() {
-    const timeInput = document.getElementById('timeInput').value;
+    const timeInput = document.getElementById('timeInput').value.trim();
     const result = document.getElementById('result');
     const countdown = document.getElementById('countdown');
-    const shiftLength = parseFloat(document.getElementById('shiftLength').value); // 9.5 or 4.5
+
+    const shiftLength = document.getElementById('shiftToggle').checked ? 4.5 : 9.5;
 
     clearInterval(countdownInterval);
 
@@ -21,7 +31,7 @@ function calculateTime() {
     try {
         if (timeInput.includes(":")) {
             [hours, minutes] = timeInput.split(':').map(Number);
-        } else {
+        } else if (timeInput.length >= 3) {
             const chars = timeInput.split("");
             if (chars[0] == "0") {
                 hours = chars[0] + chars[1];
@@ -30,12 +40,15 @@ function calculateTime() {
                 hours = chars[0];
                 minutes = chars[1] + chars[2];
             }
+            hours = Number(hours);
+            minutes = Number(minutes);
+        } else {
+            throw new Error('Invalid input');
         }
 
         const inTime = new Date();
         inTime.setHours(hours, minutes, 0);
 
-        // shiftLength * 60 minutes
         const newTime = new Date(inTime.getTime() + (shiftLength * 60) * 60 * 1000);
         const now = new Date();
         const timeLeft = newTime - now;
@@ -47,12 +60,13 @@ function calculateTime() {
             minute: '2-digit',
             second: '2-digit'
         })}`;
-        result.style.color = '#79dda3'; // Green color
+        result.style.color = '#79dda3';
 
         countdownInterval = setInterval(() => updateCountdown(newTime), 1000);
     } catch (error) {
-        result.innerHTML = error;
-        result.style.color = '#d65b94'; // Red color
+        result.innerHTML = 'Invalid time format. Please use HH:MM';
+        result.style.color = '#d65b94';
+        countdown.innerHTML = "";
     }
 }
 
@@ -72,5 +86,5 @@ function updateCountdown(newTime) {
 
     document.getElementById('countdown').innerHTML =
         `Time left: ${hoursLeft}:${minutesLeft.toString().padStart(2, '0')}:${secondsLeft.toString().padStart(2, '0')}`;
-    document.getElementById('countdown').style.color = '#79dda3'; // Green color
+    document.getElementById('countdown').style.color = '#79dda3';
 }
